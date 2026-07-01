@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 import xml.etree.ElementTree as ET
 from ddgs import DDGS
 
@@ -12,6 +12,13 @@ def search_on_google():
         with DDGS() as ddgs:
             results = list(ddgs.text(text, max_results=10))
         save_to_xml_file(results, "results.xml")
+
+        return send_file(
+            "results.xml",
+            as_attachment=True,
+            download_name="results.xml"
+        )
+
 
     return render_template("zkouskovy_ukol.html")
 
