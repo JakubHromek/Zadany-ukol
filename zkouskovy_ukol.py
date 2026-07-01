@@ -7,36 +7,32 @@ app.secret_key = "nejaky-dlouhy-nahodny-tajny-retezec"
 
 @app.route("/", methods=["GET", "POST"])
 def search_on_google():
-    print("Moreeee")
     if request.method == "POST":
-        print("More")
         text = request.form["q"]
         with DDGS() as ddgs:
             results = list(ddgs.text(text, max_results=10))
         save_to_xml_file(results, "results.xml")
 
-
-    print("AHoooj")
     return render_template("zkouskovy_ukol.html")
 
 def save_to_xml_file(results, name):
     root = ET.Element("results")
 
-    for i, a in enumerate(results, start = 0):
-        print(a)
+    for item in results:
         result = ET.SubElement(root, "result")
+
         title = ET.SubElement(result, "title")
-        title.text = a["title"]
+        title.text = item["title"]
             
         href = ET.SubElement(result, "href")
-        href.text = a["href"]
+        href.text = item["href"]
 
         body = ET.SubElement(result, "body")
-        body.text = a["body"]
+        body.text = item["body"]
 
     tree = ET.ElementTree(root)
     ET.indent(tree, space="    ", level=0)
-    tree.write(name)
+    tree.write(name, encoding="utf-8", xml_declaration=True)
 
 if __name__ == '__main__':
     app.run(debug=False)
