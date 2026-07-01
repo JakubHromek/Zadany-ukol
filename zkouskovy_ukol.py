@@ -35,4 +35,4 @@ def save_to_xml_file(results, name):
     tree.write(name, encoding="utf-8", xml_declaration=True)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(host="0.0.0.0", port=5000)
